@@ -1,35 +1,40 @@
-let datosX = [];
-let datosY = [];
+const conocimiento = {};
 
-function entrenar() {
-    const x = parseFloat(document.getElementById('input-x').value);
-    const y = parseFloat(document.getElementById('input-y').value);
-    
-    datosX.push(x);
-    datosY.push(y);
+function sendMessage(event) {
+    if (event.key === "Enter") {
+        const userInput = document.getElementById("user-input").value.trim();
+        if (userInput === "") return;
 
-    // Entrenar modelo (aquí podrías realizar el entrenamiento real con los datos)
-    const modeloEntrenado = entrenarModelo(datosX, datosY);
+        const chatBox = document.getElementById("chat-box");
+        const userMessage = document.createElement("div");
+        userMessage.classList.add("user-message");
+        userMessage.textContent = userInput;
+        chatBox.appendChild(userMessage);
 
-    // Realizar predicción con el último dato ingresado
-    const prediccion = predecir(modeloEntrenado, x);
+        const botResponse = getBotResponse(userInput);
+        const botMessage = document.createElement("div");
+        botMessage.classList.add("bot-message");
+        botMessage.textContent = botResponse;
+        chatBox.appendChild(botMessage);
 
-    mostrarResultado(prediccion);
+        document.getElementById("user-input").value = "";
+    }
 }
 
-function entrenarModelo(x, y) {
-    // Aquí iría el código para entrenar el modelo con los datos proporcionados
-    // Por simplicidad, devolvemos una función lineal básica
-    const pendiente = calcularPendiente(x, y);
-    const intercepto = calcularIntercepto(x, y);
-    return { pendiente, intercepto };
+function getBotResponse(userInput) {
+    if (conocimiento[userInput]) {
+        return conocimiento[userInput];
+    } else {
+        return "Lo siento, no sé qué responder a eso. ¿Me enseñas?";
+    }
 }
 
-function predecir(modelo, x) {
-    // Aquí iría el código para realizar una predicción con el modelo entrenado
-    // Por simplicidad, utilizamos una función lineal básica
-    return modelo.pendiente * x + modelo.intercepto;
-}
+function teachBot() {
+    const userInput = document.getElementById("user-input").value.trim();
+    if (userInput === "") return;
 
-function calcularPendiente(x, y) {
-    // Calcula la pendiente de la línea de regresión
+    const respuesta = prompt("¿Qué debo responder a eso?");
+    if (respuesta) {
+        conocimiento[userInput] = respuesta;
+    }
+}
